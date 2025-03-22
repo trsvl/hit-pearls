@@ -1,25 +1,32 @@
 ﻿using System.Threading;
+using Bootstrap.Audio;
 using Cysharp.Threading.Tasks;
+using VContainer;
 using VContainer.Unity;
 
 namespace Bootstrap
 {
     public class BootstrapEntryPoint : IAsyncStartable
     {
-        private readonly Loader _loader;
+        private readonly IObjectResolver _container;
 
 
-        public BootstrapEntryPoint(Loader loader)
+        public BootstrapEntryPoint(IObjectResolver container)
         {
-            _loader = loader;
+            _container = container;
         }
 
         public async UniTask StartAsync(CancellationToken cancellation)
         {
+            _container.Resolve<VolumePresenter>().Initialize();
+
             bool isBootstrapScene = Loader.IsCurrentSceneEqual(SceneName.Bootstrap);
+
+
             if (!isBootstrapScene) return;
 
-            await _loader.LoadScene(SceneName.MainMenu);
+            var loader = _container.Resolve<Loader>();
+            await loader.LoadScene(SceneName.MainMenu);
         }
     }
 }

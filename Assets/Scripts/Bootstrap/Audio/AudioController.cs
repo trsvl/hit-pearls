@@ -7,13 +7,13 @@ using UnityEngine;
 using Utils.Scene.AudioSystem;
 using VContainer;
 
-namespace Bootstrap
+namespace Bootstrap.Audio
 {
     public class AudioController : MonoBehaviour
     {
         public static AudioController Instance;
 
-        private readonly Dictionary<AudioAction, List<Audio>> audioClips = new();
+        private readonly Dictionary<AudioAction, List<Utils.Scene.AudioSystem.Audio>> audioClips = new();
         private CancellationToken _cancellationToken;
         private CancellationTokenSource linkedCts;
 
@@ -34,7 +34,7 @@ namespace Bootstrap
         {
             foreach (Audios arr in audios)
             {
-                foreach (Audio a in arr.audios)
+                foreach (Utils.Scene.AudioSystem.Audio a in arr.audios)
                 {
                     AudioSource audioSource = gameObject.AddComponent<AudioSource>();
                     audioSource.clip = a.clip;
@@ -49,7 +49,7 @@ namespace Bootstrap
 
                     if (!audioClips.ContainsKey(arr.action))
                     {
-                        audioClips[arr.action] = new List<Audio>();
+                        audioClips[arr.action] = new List<Utils.Scene.AudioSystem.Audio>();
                     }
 
                     audioClips[arr.action].Add(a);
@@ -61,7 +61,7 @@ namespace Bootstrap
         {
             foreach (Audios arr in audios)
             {
-                foreach (Audio a in arr.audios)
+                foreach (Utils.Scene.AudioSystem.Audio a in arr.audios)
                 {
                     if (audioClips.ContainsKey(arr.action) && audioClips[arr.action].Contains(a))
                     {
@@ -83,9 +83,9 @@ namespace Bootstrap
 
         public void PauseGame()
         {
-            foreach (List<Audio> audioList in audioClips.Values)
+            foreach (List<Utils.Scene.AudioSystem.Audio> audioList in audioClips.Values)
             {
-                foreach (Audio a in audioList)
+                foreach (Utils.Scene.AudioSystem.Audio a in audioList)
                 {
                     if (!a.source.isPlaying) continue;
 
@@ -96,16 +96,16 @@ namespace Bootstrap
 
         public void ResumeGame()
         {
-            foreach (List<Audio> audioList in audioClips.Values)
+            foreach (List<Utils.Scene.AudioSystem.Audio> audioList in audioClips.Values)
             {
-                foreach (Audio a in audioList)
+                foreach (Utils.Scene.AudioSystem.Audio a in audioList)
                 {
                     ResumeFade(a);
                 }
             }
         }
 
-        private async UniTask PlayAudio(Audio a)
+        private async UniTask PlayAudio(Utils.Scene.AudioSystem.Audio a)
         {
             int delayDuration = (int)(a.delay * 1000);
             await UniTask.Delay(delayDuration, cancellationToken: _cancellationToken);
@@ -114,12 +114,12 @@ namespace Bootstrap
             if (a.fadeOutDuration != 0f) FadeOut(a).Forget();
         }
 
-        private void FadeIn(Audio a)
+        private void FadeIn(Utils.Scene.AudioSystem.Audio a)
         {
             FadeVolume(a.source, 0f, a.volume, a.fadeInDuration).Forget();
         }
 
-        private async UniTask FadeOut(Audio a)
+        private async UniTask FadeOut(Utils.Scene.AudioSystem.Audio a)
         {
             float delayDuration = a.clip.length - a.fadeOutDuration - a.source.time;
             await UniTask.WaitForSeconds(delayDuration, cancellationToken: _cancellationToken);
@@ -136,7 +136,7 @@ namespace Bootstrap
             action?.Invoke();
         }
 
-        private void PauseFade(Audio a)
+        private void PauseFade(Utils.Scene.AudioSystem.Audio a)
         {
             linkedCts = new CancellationTokenSource();
             linkedCts = CancellationTokenSource.CreateLinkedTokenSource(linkedCts.Token, _cancellationToken);
@@ -145,7 +145,7 @@ namespace Bootstrap
             void Action() => a.source.Pause();
         }
 
-        private void ResumeFade(Audio a)
+        private void ResumeFade(Utils.Scene.AudioSystem.Audio a)
         {
             linkedCts = new CancellationTokenSource();
             linkedCts = CancellationTokenSource.CreateLinkedTokenSource(linkedCts.Token, _cancellationToken);

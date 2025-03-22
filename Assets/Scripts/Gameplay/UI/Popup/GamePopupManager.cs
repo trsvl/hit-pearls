@@ -1,4 +1,5 @@
 ﻿using Bootstrap;
+using Bootstrap.Audio;
 using Cysharp.Threading.Tasks;
 using Gameplay.Animations;
 using Gameplay.Utils;
@@ -14,12 +15,13 @@ namespace Gameplay.UI.Popup
         private readonly Loader _loader;
         private readonly MoveUIAnimation _moveUIAnimation;
         private readonly CameraController _cameraController;
+        private readonly VolumePresenter _volumePresenter;
         private GamePopup _gamePopup;
 
 
         public GamePopupManager(GamePopup gamePopupPrefab, Transform canvases,
             GameplayStateObserver gameplayStateObserver, Loader loader, MoveUIAnimation moveUIAnimation,
-            CameraController cameraController)
+            CameraController cameraController, VolumePresenter volumePresenter)
         {
             _gamePopupPrefab = gamePopupPrefab;
             _canvases = canvases;
@@ -27,12 +29,14 @@ namespace Gameplay.UI.Popup
             _loader = loader;
             _moveUIAnimation = moveUIAnimation;
             _cameraController = cameraController;
+            _volumePresenter = volumePresenter;
         }
 
         public void PauseGame()
         {
             CreatePopup();
             _gamePopup.PauseGame(RestartGameClick, ResumeGameCLick, MainMenuClick);
+            _volumePresenter.CreateVolumeSliders(_gamePopup.GetContainer().transform);
         }
 
         public void ResumeGame()
