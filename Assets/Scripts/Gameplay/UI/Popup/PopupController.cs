@@ -1,5 +1,7 @@
-﻿using Bootstrap;
+﻿using System.Threading;
+using Bootstrap;
 using Bootstrap.Audio;
+using Bootstrap.UI;
 using Cysharp.Threading.Tasks;
 using Gameplay.Animations;
 using Gameplay.Utils;
@@ -7,29 +9,31 @@ using UnityEngine;
 
 namespace Gameplay.UI.Popup
 {
-    public class GamePopupManager : IPauseGame, IResumeGame, ILoseGame, IFinishGame
+    public class PopupController : IPauseGame, IResumeGame, ILoseGame, IFinishGame
     {
         private readonly GamePopup _gamePopupPrefab;
         private readonly Transform _canvases;
         private readonly GameplayStateObserver _gameplayStateObserver;
         private readonly Loader _loader;
-        private readonly MoveUIAnimation _moveUIAnimation;
+        private readonly UIAnimation _uiAnimation;
         private readonly CameraController _cameraController;
         private readonly VolumePresenter _volumePresenter;
+        private readonly CancellationToken _cancellationToken;
         private GamePopup _gamePopup;
 
 
-        public GamePopupManager(GamePopup gamePopupPrefab, Transform canvases,
-            GameplayStateObserver gameplayStateObserver, Loader loader, MoveUIAnimation moveUIAnimation,
-            CameraController cameraController, VolumePresenter volumePresenter)
+        public PopupController(GamePopup gamePopupPrefab, Transform canvases,
+            GameplayStateObserver gameplayStateObserver, Loader loader, UIAnimation uiAnimation,
+            CameraController cameraController, VolumePresenter volumePresenter, CancellationToken cancellationToken)
         {
             _gamePopupPrefab = gamePopupPrefab;
             _canvases = canvases;
             _gameplayStateObserver = gameplayStateObserver;
             _loader = loader;
-            _moveUIAnimation = moveUIAnimation;
+            _uiAnimation = uiAnimation;
             _cameraController = cameraController;
             _volumePresenter = volumePresenter;
+            _cancellationToken = cancellationToken;
         }
 
         public void PauseGame()
@@ -60,7 +64,8 @@ namespace Gameplay.UI.Popup
         {
             _gamePopup = Object.Instantiate(_gamePopupPrefab, _canvases);
             _gamePopup.AssignCamera(_cameraController.GetUICamera());
-            _moveUIAnimation.Move(_gamePopup.GetContainer(), 0.25f, initialOffset: (0f, -1000f)).Forget();
+            _uiAnimation.Move(_gamePopup.GetContainer(), 0.25f, _cancellationToken, initialOffset: (0f, -1000f))
+                .Forget();
         }
 
         private void ResumeGameCLick()

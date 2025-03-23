@@ -1,6 +1,8 @@
 ﻿using System.Threading;
+using Bootstrap.UI;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using MainMenu.UI.Header;
 using UnityEngine;
 
 namespace Gameplay.Animations
@@ -9,42 +11,42 @@ namespace Gameplay.Animations
     {
         private readonly RectTransform _header;
         private readonly RectTransform _pauseButton;
+        private readonly MainMenuHeaderManager _mainMenuHeaderManager;
+        private readonly UIAnimation _uiAnimation;
         private readonly CancellationToken _cancellationToken;
 
 
-        public MoveUIAnimation(RectTransform header, RectTransform pauseButton, CancellationToken cancellationToken)
+        public MoveUIAnimation(RectTransform header, RectTransform pauseButton,
+            MainMenuHeaderManager mainMenuHeaderManager, UIAnimation uiAnimation, CancellationToken cancellationToken)
         {
             _header = header;
             _pauseButton = pauseButton;
+            _mainMenuHeaderManager = mainMenuHeaderManager;
+            _uiAnimation = uiAnimation;
             _cancellationToken = cancellationToken;
 
             _header.gameObject.SetActive(false);
             _pauseButton.gameObject.SetActive(false);
         }
 
-        public async UniTask Move(RectTransform uiElement, float duration, Vector2 initialPosition = default,
-            (float, float) initialOffset = default, Vector2 targetPosition = default,
-            (float, float) targetOffset = default)
-        {
-            targetPosition = targetPosition == default
-                ? uiElement.anchoredPosition + new Vector2(targetOffset.Item1, targetOffset.Item2)
-                : targetPosition + new Vector2(targetOffset.Item1, targetOffset.Item2);
-
-            uiElement.anchoredPosition = initialPosition == default
-                ? uiElement.anchoredPosition + new Vector2(initialOffset.Item1, initialOffset.Item2)
-                : initialPosition + new Vector2(initialOffset.Item1, initialOffset.Item2);
-            uiElement.gameObject.SetActive(true);
-
-            await uiElement.DOAnchorPos(targetPosition, duration).SetEase(Ease.Linear).SetUpdate(true)
-                .ToUniTask(cancellationToken: _cancellationToken);
-        }
-
         public void MoveOnStart()
         {
             const float duration = 0.15f;
 
-            Move(_header, duration, initialOffset: (0f, 500f)).Forget();
-            Move(_pauseButton, duration, initialOffset: (500f, 0f)).Forget();
+            _uiAnimation.Move(_header, duration, _cancellationToken, initialOffset: (0f, 500f)).Forget();
+            _uiAnimation.Move(_pauseButton, duration, _cancellationToken, initialOffset: (500f, 0f)).Forget();
+        }
+
+        public async UniTask ChangeHeader(float duration)
+        {
+            Vector2 targetPosition = _header.anchoredPosition;
+
+            await _uiAnimation.Move(_header, duration, _cancellationToken, targetOffset: (0f, 500f));
+            Object.Destroy(_header.gameObject);
+
+            RectTransform mainMenuHeader = _mainMenuHeaderManager.CreateHeader();
+            await _uiAnimation.Move(mainMenuHeader, duration, _cancellationToken, initialOffset: (0f, 500f),
+                targetPosition: targetPosition);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Utils.EventBusSystem;
+﻿using MainMenu.UI.Buttons;
+using Utils.EventBusSystem;
 using Utils.Scene;
 using VContainer;
 
@@ -10,6 +11,7 @@ namespace MainMenu.DI
             container, new[]
             {
                 typeof(MainMenuAudioEventsHandler),
+                typeof(PauseButton)
             })
         {
         }

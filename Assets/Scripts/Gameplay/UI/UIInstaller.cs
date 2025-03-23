@@ -36,7 +36,7 @@ namespace Gameplay.UI
             builder.Register<RespawnBallButton>(Lifetime.Scoped)
                 .WithParameter(_respawnBallButton);
 
-            builder.Register<GamePopupManager>(Lifetime.Scoped)
+            builder.Register<PopupController>(Lifetime.Scoped)
                 .WithParameter("gamePopupPrefab", _gamePopupPrefab)
                 .WithParameter(_canvases);
         }

@@ -6,19 +6,19 @@ namespace Gameplay.Utils
 {
     public class FinishGameController
     {
-        private readonly ChangeHeader _changeHeader;
+        private readonly MoveUIAnimation _moveUIAnimation;
         private readonly CurrencyController _currencyController;
 
-        
-        public FinishGameController(ChangeHeader changeHeader, CurrencyController currencyController)
+
+        public FinishGameController(MoveUIAnimation moveUIAnimation, CurrencyController currencyController)
         {
-            _changeHeader = changeHeader;
+            _moveUIAnimation = moveUIAnimation;
             _currencyController = currencyController;
         }
 
         public async UniTask FinishGame()
         {
-            await _changeHeader.Swap(0.25f);
+            await _moveUIAnimation.ChangeHeader(0.25f);
             _currencyController.UpdateCurrency(CurrencyType.Gold, 500);
         }
     }

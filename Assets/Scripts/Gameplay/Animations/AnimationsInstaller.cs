@@ -30,9 +30,6 @@ namespace Gameplay.Animations
             builder.RegisterComponentOnNewGameObject<ParticlesFactory>(Lifetime.Scoped, "Particles Factory")
                 .WithParameter(_onDestroySphereParticlePrefab);
 
-            builder.Register<ChangeHeader>(Lifetime.Scoped)
-                .WithParameter("gameplayHeader", _header);
-
             builder.Register<MoveUIAnimation>(Lifetime.Scoped)
                 .WithParameter("header", _header)
                 .WithParameter("pauseButton", _pauseButton);

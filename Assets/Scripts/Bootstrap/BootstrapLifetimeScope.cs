@@ -1,6 +1,7 @@
 using System.Text;
 using Bootstrap.Audio;
 using Bootstrap.Currency;
+using Bootstrap.UI;
 using UnityEngine;
 using UnityEngine.Audio;
 using Utils.EventBusSystem;
@@ -30,18 +31,17 @@ namespace Bootstrap
 
             builder.Register<EventBus>(Lifetime.Singleton);
 
+            builder.Register<UIAnimation>(Lifetime.Singleton);
+
             RegisterCurrency(builder);
 
             RegisterAudio(builder);
-            
+
             RegisterVolume(builder);
 
             builder.RegisterEntryPoint<BootstrapEntryPoint>();
-            
-            builder.RegisterBuildCallback(container =>
-            {
-                container.Resolve<VolumePresenter>();
-            });
+
+            builder.RegisterBuildCallback(container => { container.Resolve<VolumePresenter>(); });
         }
 
         private void RegisterCurrency(IContainerBuilder builder)
@@ -61,7 +61,7 @@ namespace Bootstrap
         {
             VolumeModel volumeModel = new VolumeModel(_mixer);
             VolumeVIew volumeVIew = new VolumeVIew(_sliderPrefab);
-            
+
             builder.Register<VolumePresenter>(Lifetime.Singleton)
                 .WithParameter(volumeModel)
                 .WithParameter(volumeVIew);

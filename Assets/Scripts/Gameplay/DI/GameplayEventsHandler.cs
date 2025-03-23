@@ -26,7 +26,7 @@ namespace Gameplay.DI
                 typeof(DecreaseFOVAnimation),
                 typeof(GameplayAudioEventsHandler),
                 typeof(SpawnSmallSpheresAnimation),
-                typeof(GamePopupManager),
+                typeof(PopupController),
                 typeof(PauseButton),
                 typeof(SphereGenerator),
                 typeof(BallThrower)
