@@ -19,7 +19,7 @@ namespace Gameplay.Utils
         public async UniTask FinishGame()
         {
             await _moveUIAnimation.ChangeHeader(0.25f);
-            _currencyController.UpdateCurrency(CurrencyType.Gold, 500);
+            _currencyController.AddCurrency(CurrencyType.Gold, 500);
         }
     }
 }

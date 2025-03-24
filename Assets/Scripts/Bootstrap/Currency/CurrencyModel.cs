@@ -8,7 +8,8 @@ namespace Bootstrap.Currency
     {
         public event Action<CurrencyType, ulong, ulong> OnCurrencyChanged;
 
-        private readonly Dictionary<CurrencyType, ulong> _currencies = new();
+        private readonly Dictionary<CurrencyType, CurrencyData> _currencies = new();
+
         private const string GOLD_CURRENCY = "GoldCurrency";
         private const string DIAMOND_CURRENCY = "DiamondCurrency";
 
@@ -20,50 +21,52 @@ namespace Bootstrap.Currency
 
         private void LoadData()
         {
-            var goldCurrencyValue = PlayerPrefs.GetString(GOLD_CURRENCY, "550");
-            var goldCurrency = ParseData(goldCurrencyValue);
-            _currencies.Add(CurrencyType.Gold, goldCurrency);
+            _currencies.Add(CurrencyType.Gold, new CurrencyData(GOLD_CURRENCY, 0));
+            ParseData(CurrencyType.Gold);
 
-            var diamondValue = PlayerPrefs.GetString(DIAMOND_CURRENCY, "1560");
-            var diamondCurrency = ParseData(diamondValue);
-            _currencies.Add(CurrencyType.Diamond, diamondCurrency);
+            _currencies.Add(CurrencyType.Diamond, new CurrencyData(DIAMOND_CURRENCY, 0));
+            ParseData(CurrencyType.Diamond);
         }
 
-        public void UpdateCurrency(CurrencyType type, ulong value)
+        public void AddCurrency(CurrencyType type, ulong value)
         {
-            if (value > 0) AddCurrency(type, value);
-            else RemoveCurrency(type, value);
-        }
+            if (!_currencies.TryGetValue(type, out CurrencyData data)) return;
 
-        private void AddCurrency(CurrencyType type, ulong value)
-        {
-            if (!_currencies.TryGetValue(type, out ulong currency)) return;
-
-            if (currency > ulong.MaxValue - value)
+            if (data.Currency > ulong.MaxValue - value)
             {
-                currency = ulong.MaxValue;
+                data.Currency = ulong.MaxValue;
             }
-            else currency += value;
+            else data.Currency += value;
 
-            OnCurrencyChanged?.Invoke(type, currency, value);
+            OnChange(type, data, value);
         }
 
-        private void RemoveCurrency(CurrencyType type, ulong value)
+        public void RemoveCurrency(CurrencyType type, ulong value)
         {
-            if (!_currencies.TryGetValue(type, out ulong currency)) return;
+            if (!_currencies.TryGetValue(type, out CurrencyData data)) return;
 
-            if (currency < ulong.MinValue + value)
+            if (data.Currency < ulong.MinValue + value)
             {
-                currency = ulong.MinValue;
+                data.Currency = ulong.MinValue;
             }
-            else currency -= value;
+            else data.Currency -= value;
 
-            OnCurrencyChanged?.Invoke(type, currency, value);
+            OnChange(type, data, value);
         }
 
-        private ulong ParseData(string data)
+        private void ParseData(CurrencyType type)
         {
-            return ulong.TryParse(data, out var result) ? result : 0;
+            CurrencyData currencyData = _currencies[type];
+            var value = PlayerPrefs.GetString(currencyData.Name);
+            var currencyValue = ulong.TryParse(value, out var result) ? result : 0;
+            currencyData.Currency = currencyValue;
+        }
+
+        private void OnChange(CurrencyType type, CurrencyData data, ulong value)
+        {
+            PlayerPrefs.SetString(data.Name, data.Currency.ToString());
+            
+            OnCurrencyChanged?.Invoke(type, data.Currency, value);
         }
 
         public void Dispose()

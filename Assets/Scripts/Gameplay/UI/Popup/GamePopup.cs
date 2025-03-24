@@ -17,9 +17,18 @@ namespace Gameplay.UI.Popup
             AssignButton(MainMenuClick, "Main menu");
         }
 
-        public void FinishGame(UnityAction RestartGameClick, UnityAction MainMenuClick)
+        public void FinishGame(bool isMaxLevel, UnityAction NextLevelClick, UnityAction RestartGameClick,
+            UnityAction MainMenuClick)
         {
-            AssignButton(RestartGameClick, "Play again");
+            if (isMaxLevel)
+            {
+                AssignButton(RestartGameClick, "Restart game");
+            }
+            else
+            {
+                AssignButton(NextLevelClick, "Next level");
+            }
+
             AssignButton(MainMenuClick, "Main menu");
         }
 

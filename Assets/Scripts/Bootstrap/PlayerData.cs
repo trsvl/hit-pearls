@@ -9,14 +9,20 @@ namespace Bootstrap
             get => currentLevel;
             set
             {
-                currentLevel = value;
+                currentLevel = maxLevel < value ? maxLevel : value;
+
                 PlayerPrefs.SetInt(CURRENT_LEVEL, currentLevel);
             }
         }
 
-        public int MaxLevel { get; private set; } = 5; //!!!
+        private const int maxLevel = 5; //!!!
 
         private int currentLevel = PlayerPrefs.GetInt(CURRENT_LEVEL, 1);
         private const string CURRENT_LEVEL = "CurrentLevel";
+
+        public bool IsMaxLevel()
+        {
+            return maxLevel == currentLevel;
+        }
     }
 }

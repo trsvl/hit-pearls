@@ -6,7 +6,7 @@ using Utils.UI.Buttons;
 
 namespace Gameplay.UI.Buttons
 {
-    public class RespawnBallButton : IStartGame, IAfterDestroySphereSegment, IReleaseBall, IAfterReleaseBall,
+    public class RespawnBallButton : IStartGame, IReleaseBall, IAfterReleaseBall,
         IFinishGame, ILoseGame
     {
         private readonly Button _button;
@@ -26,11 +26,6 @@ namespace Gameplay.UI.Buttons
         }
 
         public void StartGame()
-        {
-            IsActiveButton(Condition());
-        }
-
-        public void OnAfterDestroySphereSegment(int currentShotsNumber)
         {
             IsActiveButton(Condition());
         }

@@ -13,6 +13,7 @@ namespace Gameplay.UI.Popup
     {
         private readonly GamePopup _gamePopupPrefab;
         private readonly Transform _canvases;
+        private readonly PlayerData _playerData;
         private readonly GameplayStateObserver _gameplayStateObserver;
         private readonly Loader _loader;
         private readonly UIAnimation _uiAnimation;
@@ -22,12 +23,13 @@ namespace Gameplay.UI.Popup
         private GamePopup _gamePopup;
 
 
-        public PopupController(GamePopup gamePopupPrefab, Transform canvases,
+        public PopupController(GamePopup gamePopupPrefab, Transform canvases, PlayerData playerData,
             GameplayStateObserver gameplayStateObserver, Loader loader, UIAnimation uiAnimation,
             CameraController cameraController, VolumePresenter volumePresenter, CancellationToken cancellationToken)
         {
             _gamePopupPrefab = gamePopupPrefab;
             _canvases = canvases;
+            _playerData = playerData;
             _gameplayStateObserver = gameplayStateObserver;
             _loader = loader;
             _uiAnimation = uiAnimation;
@@ -51,7 +53,7 @@ namespace Gameplay.UI.Popup
         public void FinishGame()
         {
             CreatePopup();
-            _gamePopup.FinishGame(RestartGameClick, MainMenuClick);
+            _gamePopup.FinishGame(_playerData.IsMaxLevel(), NextLevelClick, RestartGameClick, MainMenuClick);
         }
 
         public void LoseGame()
@@ -66,6 +68,12 @@ namespace Gameplay.UI.Popup
             _gamePopup.AssignCamera(_cameraController.GetUICamera());
             _uiAnimation.Move(_gamePopup.GetContainer(), 0.25f, _cancellationToken, initialOffset: (0f, -1000f))
                 .Forget();
+        }
+
+        private void NextLevelClick()
+        {
+            _playerData.CurrentLevel += 1;
+            _ = _loader.LoadScene(SceneName.Gameplay);
         }
 
         private void ResumeGameCLick()

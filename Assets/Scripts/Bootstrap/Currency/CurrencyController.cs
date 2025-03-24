@@ -16,16 +16,21 @@ namespace Bootstrap.Currency
             _model.OnCurrencyChanged += view.UpdateCurrencyText;
         }
 
-        public void UpdateCurrency(CurrencyType type, ulong amount)
+        public void AddCurrency(CurrencyType type, ulong amount)
         {
-            _model.UpdateCurrency(type, amount);
+            _model.AddCurrency(type, amount);
+        }
+
+        public void RemoveCurrency(CurrencyType type, ulong amount)
+        {
+            _model.RemoveCurrency(type, amount);
         }
 
         public void InitMainMenuHeaderCurrencies(MainMenuHeader header, CancellationToken cancellationToken)
         {
             _view.InitHeader(header, cancellationToken);
-            UpdateCurrency(CurrencyType.Gold, 0);
-            UpdateCurrency(CurrencyType.Diamond, 0);
+            AddCurrency(CurrencyType.Gold, 0);
+            AddCurrency(CurrencyType.Diamond, 0);
         }
 
         public void ClearMainMenuHeaderCurrencies()

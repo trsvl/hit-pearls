@@ -40,7 +40,7 @@ namespace MainMenu.UI.Footer
         private void CheckButtons()
         {
             _previousLevelButton.interactable = 1 <= _levelNumber - 1;
-            _nextLevelButton.interactable = _playerData.MaxLevel >= _levelNumber + 1;
+            _nextLevelButton.interactable = !_playerData.IsMaxLevel();
         }
 
         private void OnEnable()
