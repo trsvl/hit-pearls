@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using Bootstrap.Audio;
 using Cysharp.Threading.Tasks;
+using Firebase.Scripts;
 using VContainer;
 using VContainer.Unity;
 
@@ -18,6 +19,8 @@ namespace Bootstrap
 
         public async UniTask StartAsync(CancellationToken cancellation)
         {
+            await _container.Resolve<FirebaseInit>().Initialize();
+
             _container.Resolve<VolumePresenter>().Initialize();
 
             bool isBootstrapScene = Loader.IsCurrentSceneEqual(SceneName.Bootstrap);

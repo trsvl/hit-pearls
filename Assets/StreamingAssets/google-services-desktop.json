@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "570527172068",
+    "firebase_url": "https://pearl-gem-8e7f9-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "pearl-gem-8e7f9",
+    "storage_bucket": "pearl-gem-8e7f9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570527172068:android:5a419bae8bb7735d8af3f1",
+        "android_client_info": {
+          "package_name": "com.CalmCat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTKMMywPQyfg3qUYzrGh12O1XIeXGTAlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570527172068:android:a411bd1d579cc5fb8af3f1",
+        "android_client_info": {
+          "package_name": "com.CalmCatStudio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTKMMywPQyfg3qUYzrGh12O1XIeXGTAlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

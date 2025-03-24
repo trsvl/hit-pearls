@@ -2,6 +2,7 @@ using System.Text;
 using Bootstrap.Audio;
 using Bootstrap.Currency;
 using Bootstrap.UI;
+using Firebase.Scripts;
 using UnityEngine;
 using UnityEngine.Audio;
 using Utils.EventBusSystem;
@@ -22,6 +23,8 @@ namespace Bootstrap
 
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.Register<FirebaseInit>(Lifetime.Singleton);
+
             builder.Register<Loader>(Lifetime.Singleton)
                 .WithParameter(_loadingScreenPrefab);
 

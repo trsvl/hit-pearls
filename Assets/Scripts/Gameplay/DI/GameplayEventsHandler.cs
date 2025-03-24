@@ -1,4 +1,5 @@
-﻿using Gameplay.Animations;
+﻿using Firebase.Scripts;
+using Gameplay.Animations;
 using Gameplay.BallThrowing;
 using Gameplay.SphereData;
 using Gameplay.UI.Buttons;
@@ -29,7 +30,8 @@ namespace Gameplay.DI
                 typeof(PopupController),
                 typeof(PauseButton),
                 typeof(SphereGenerator),
-                typeof(BallThrower)
+                typeof(BallThrower),
+                typeof(FirebaseInit)
             })
         {
         }
