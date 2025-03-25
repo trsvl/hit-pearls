@@ -36,7 +36,7 @@ namespace MainMenu.UI.Header
 
         public void InitHeader()
         {
-            _mainMenuHeader = Object.FindObjectOfType<MainMenuHeader>();
+            _mainMenuHeader = Object.FindFirstObjectByType<MainMenuHeader>();
             _currencyController.InitMainMenuHeaderCurrencies(_mainMenuHeader, _cancellationToken);
         }
 
