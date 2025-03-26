@@ -1,4 +1,5 @@
-﻿using Firebase.Scripts;
+﻿using Bootstrap;
+using Firebase.Scripts;
 using Gameplay.Animations;
 using Gameplay.BallThrowing;
 using Gameplay.SphereData;
@@ -31,7 +32,8 @@ namespace Gameplay.DI
                 typeof(PauseButton),
                 typeof(SphereGenerator),
                 typeof(BallThrower),
-                typeof(FirebaseInit)
+                typeof(FirebaseInit),
+                typeof(LevelController)
             })
         {
         }

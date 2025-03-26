@@ -1,6 +1,7 @@
 using System.Text;
 using Bootstrap.Audio;
 using Bootstrap.Currency;
+using Bootstrap.Player;
 using Bootstrap.UI;
 using Firebase.Scripts;
 using UnityEngine;
@@ -19,16 +20,20 @@ namespace Bootstrap
         [SerializeField] private GameObject _currencyPrefab;
         [SerializeField] private AudioMixer _mixer;
         [SerializeField] private SliderObject _sliderPrefab;
+        
+        private readonly SaveManager _saveManager = new();
 
 
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterInstance(_saveManager);
+
             builder.Register<FirebaseInit>(Lifetime.Singleton);
 
             builder.Register<Loader>(Lifetime.Singleton)
                 .WithParameter(_loadingScreenPrefab);
 
-            builder.Register<PlayerData>(Lifetime.Singleton); //!!!
+            builder.Register<LevelController>(Lifetime.Singleton); //!!!
 
             builder.Register<CameraController>(Lifetime.Singleton);
 
@@ -62,7 +67,7 @@ namespace Bootstrap
 
         private void RegisterVolume(IContainerBuilder builder)
         {
-            VolumeModel volumeModel = new VolumeModel(_mixer);
+            VolumeModel volumeModel = new VolumeModel(_mixer, _saveManager);
             VolumeVIew volumeVIew = new VolumeVIew(_sliderPrefab);
 
             builder.Register<VolumePresenter>(Lifetime.Singleton)

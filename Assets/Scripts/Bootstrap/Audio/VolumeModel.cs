@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Bootstrap.Player;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -9,35 +10,40 @@ namespace Bootstrap.Audio
     public class VolumeModel
     {
         private readonly AudioMixer _mixer;
+        private readonly SaveManager _saveManager;
         private CancellationTokenSource _saveDataCts;
 
         private Slider _sfxSlider;
         private Slider _musicSlider;
 
-        private const string MIXER_SFX = "SFX";
-        private const string MIXER_MUSIC = "Music";
+        private const string VOLUME_KEY = "Volume";
+        private const string Mixer_SFX = "SFX";
+        private const string Mixer_Music = "Music";
+
+        private VolumeData _volumeData;
 
 
-        public VolumeModel(AudioMixer mixer)
+        public VolumeModel(AudioMixer mixer, SaveManager saveManager)
         {
             _mixer = mixer;
+            _saveManager = saveManager;
         }
 
         public void Initialize()
         {
-            float sfxValue = PlayerPrefs.GetFloat(MIXER_SFX, 1f);
-            float musicValue = PlayerPrefs.GetFloat(MIXER_MUSIC, 1f);
+            _volumeData = _saveManager.Load<VolumeData>(VOLUME_KEY);
 
-            _mixer.SetFloat(MIXER_SFX, SetVolume(sfxValue));
-            _mixer.SetFloat(MIXER_MUSIC, SetVolume(musicValue));
+            _mixer.SetFloat(Mixer_SFX, SetVolume(_volumeData.SFXVolume));
+            _mixer.SetFloat(Mixer_Music, SetVolume(_volumeData.MusicVolume));
         }
 
         public void CreateVolumeSliders(Slider sfxSlider, Slider musicSlider)
         {
             _sfxSlider = sfxSlider;
             _musicSlider = musicSlider;
-            _sfxSlider.value = PlayerPrefs.GetFloat(MIXER_SFX, 1f);
-            _musicSlider.value = PlayerPrefs.GetFloat(MIXER_MUSIC, 1f);
+
+            _sfxSlider.value = _volumeData.SFXVolume;
+            _musicSlider.value = _volumeData.MusicVolume;
 
             _sfxSlider.onValueChanged.AddListener(SetSFXVolume);
             _musicSlider.onValueChanged.AddListener(SetMusicVolume);
@@ -45,14 +51,14 @@ namespace Bootstrap.Audio
 
         private void SetSFXVolume(float value)
         {
-            _mixer.SetFloat(MIXER_SFX, SetVolume(value));
+            _mixer.SetFloat(Mixer_SFX, SetVolume(value));
             SaveData().Forget();
         }
 
 
         private void SetMusicVolume(float value)
         {
-            _mixer.SetFloat(MIXER_MUSIC, SetVolume(value));
+            _mixer.SetFloat(Mixer_Music, SetVolume(value));
             SaveData().Forget();
         }
 
@@ -69,8 +75,13 @@ namespace Bootstrap.Audio
 
             await UniTask.WaitForSeconds(0.5f, ignoreTimeScale: true, cancellationToken: _saveDataCts.Token);
 
-            PlayerPrefs.SetFloat(MIXER_SFX, _sfxSlider.value);
-            PlayerPrefs.SetFloat(MIXER_MUSIC, _musicSlider.value);
+            PlayerPrefs.SetFloat(Mixer_SFX, _sfxSlider.value);
+            PlayerPrefs.SetFloat(Mixer_Music, _musicSlider.value);
+
+            _volumeData.SFXVolume = _sfxSlider.value;
+            _volumeData.MusicVolume = _musicSlider.value;
+
+            _saveManager.Save(VOLUME_KEY, _volumeData);
         }
     }
 }

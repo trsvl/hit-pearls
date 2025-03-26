@@ -111,12 +111,17 @@ namespace Bootstrap.Currency
                     .SetEase(Ease.OutBack)
                     .ToUniTask(cancellationToken: _cancellationToken);
 
+                if (!obj) continue;
+
                 UniTask moveTask = obj.transform.DOMove(_currencyViews[type].Item1.position, objMoveDuration)
                     .SetUpdate(true)
                     .SetEase(Ease.InBack)
                     .ToUniTask(cancellationToken: _cancellationToken);
 
-                moveTask.ContinueWith(() => Object.Destroy(obj.gameObject)).Forget();
+                moveTask.ContinueWith(() =>
+                {
+                    if (obj) Object.DestroyImmediate(obj);
+                }).Forget();
             }
 
             Object.Destroy(prefab);

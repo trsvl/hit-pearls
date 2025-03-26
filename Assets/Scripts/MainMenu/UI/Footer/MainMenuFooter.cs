@@ -14,24 +14,24 @@ namespace MainMenu.UI.Footer
         [SerializeField] private BaseButton _previousLevelButton;
         [SerializeField] private BaseButton _nextLevelButton;
 
-        private PlayerData _playerData;
+        private LevelController _levelController;
         private Loader _loader;
         private int _levelNumber;
 
 
         [Inject]
-        public void Init(PlayerData playerData, Loader loader)
+        public void Init(LevelController levelController, Loader loader)
         {
-            _playerData = playerData;
+            _levelController = levelController;
             _loader = loader;
 
-            _levelNumber = _playerData.CurrentLevel;
+            _levelNumber = _levelController.CurrentLevel;
         }
 
         public void UpdateLevel(int newLevel = 0)
         {
             _levelNumber = newLevel > 0 ? newLevel : _levelNumber;
-            _playerData.CurrentLevel = _levelNumber;
+            _levelController.CurrentLevel = _levelNumber;
 
             CheckButtons();
             _levelText.SetText($"Level {_levelNumber}");
@@ -40,7 +40,7 @@ namespace MainMenu.UI.Footer
         private void CheckButtons()
         {
             _previousLevelButton.interactable = 1 <= _levelNumber - 1;
-            _nextLevelButton.interactable = !_playerData.IsMaxLevel();
+            _nextLevelButton.interactable = _levelController.IsNextLevelAvailable();
         }
 
         private void OnEnable()

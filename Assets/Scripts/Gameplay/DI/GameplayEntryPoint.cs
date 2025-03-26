@@ -23,7 +23,7 @@ namespace Gameplay.DI
         public async UniTask StartAsync(CancellationToken cancellation)
         {
             var dataContext = _container.Resolve<DataContext>();
-            var playerData = _container.Resolve<PlayerData>();
+            var playerData = _container.Resolve<LevelController>();
             var sphereGenerator = _container.Resolve<SphereGenerator>();
             var spheresDictionary = _container.Resolve<SpheresDictionary>();
 

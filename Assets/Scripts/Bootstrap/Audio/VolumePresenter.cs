@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using VContainer.Unity;
 
@@ -15,8 +14,6 @@ namespace Bootstrap.Audio
         {
             _volumeModel = volumeModel;
             _volumeView = volumeView;
-
-
         }
 
         public void CreateVolumeSliders(Transform parent)

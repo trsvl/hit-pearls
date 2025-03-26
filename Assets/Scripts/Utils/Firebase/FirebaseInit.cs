@@ -8,12 +8,12 @@ namespace Firebase.Scripts
 {
     public class FirebaseInit : IFinishGame
     {
-        private readonly PlayerData _playerData;
+        private readonly LevelController _levelController;
 
 
-        public FirebaseInit(PlayerData playerData)
+        public FirebaseInit(LevelController levelController)
         {
-            _playerData = playerData;
+            _levelController = levelController;
         }
 
         public async UniTask Initialize()
@@ -41,7 +41,7 @@ namespace Firebase.Scripts
         {
             FirebaseAnalytics.LogEvent("Completed_Levels", new Parameter[]
             {
-                new("Level", _playerData.CurrentLevel)
+                new("Level", _levelController.CurrentLevel)
             });
         }
     }
